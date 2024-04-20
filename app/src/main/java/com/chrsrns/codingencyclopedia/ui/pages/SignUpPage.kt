@@ -121,7 +121,7 @@ fun SignUpPage(
                         } else signUpResultMsg = successMsg
                     }
                 }) {
-                Text("Sign in", fontSize = MaterialTheme.typography.bodyLarge.fontSize)
+                Text("Sign up", fontSize = MaterialTheme.typography.bodyLarge.fontSize)
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
