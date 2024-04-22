@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -29,11 +30,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import com.chrsrns.codingencyclopedia.BuildConfig
 import com.chrsrns.codingencyclopedia.R
 import com.example.compose.CodingEncyclopediaTheme
 
+
 @Composable
 fun HelpPage() {
+    val version = BuildConfig.VERSION_NAME
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -53,7 +57,7 @@ fun HelpPage() {
             )
         }
         Spacer(Modifier.height(16.dp))
-        Text("v0.0.1", color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
+        Text("v$version", color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
         Spacer(Modifier.height(32.dp))
         Text(text = buildAnnotatedString {
             withStyle(SpanStyle(fontStyle = FontStyle.Italic)) {
