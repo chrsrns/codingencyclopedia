@@ -37,10 +37,17 @@ import java.io.ByteArrayOutputStream
 
 @Composable
 fun ProfilePhoto(
-    bitmap: MutableState<Bitmap?>,
     userEmail: String
 ) {
     val context = LocalContext.current
+    var bitmap by remember {
+        mutableStateOf(
+            BitmapFactory.decodeResource(
+                context.resources,
+                R.drawable.placeholder
+            )
+        )
+    }
 
     var bytes by remember {
         mutableStateOf<ByteArray?>(null)
@@ -62,11 +69,12 @@ fun ProfilePhoto(
             .padding(6.dp)
     ) {
         val bitmapCopy =
-            bitmap.value ?: BitmapFactory.decodeResource(
+            bitmap ?: BitmapFactory.decodeResource(
                 context.resources,
                 R.drawable.placeholder
             );
         if (bitmapCopy != null) {
+
             Image(
                 bitmap = bitmapCopy.asImageBitmap(),
                 contentDescription = "Profile photo",
@@ -77,9 +85,7 @@ fun ProfilePhoto(
         }
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFBEE6DC), contentColor = Color(0xD9000000)
-            ), onClick = {
+            onClick = {
                 launcher.launch("image/*")
             }) {
             Text(text = "Change profile picture")
@@ -92,11 +98,11 @@ fun ProfilePhoto(
             .compress(Bitmap.CompressFormat.JPEG, 30, bos)
         val decodedByteArray =
             BitmapFactory.decodeByteArray(bos.toByteArray(), 0, bos.toByteArray().size)
-        bitmap.value =
+        bitmap =
             decodedByteArray
         val db = AppDatabase.getInstance(LocalContext.current).userDao()
         runBlocking {
-            val user = db.findByEmail(email = userEmail).collect {user ->
+            val user = db.findByEmail(email = userEmail).collect { user ->
                 if (user != null) {
                     println("Creating new user...")
                     val newUser =
