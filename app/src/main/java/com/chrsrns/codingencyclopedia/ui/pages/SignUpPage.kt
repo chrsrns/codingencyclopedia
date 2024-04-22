@@ -107,9 +107,8 @@ fun SignUpPage(
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(
                 onClick = {
-                    scope.launch {
-                        if (!(validateEmail(email.text))) {
-                            signUpResultMsg = "Email is invalid"
+                    if (validateEmail(email.text)) {
+                        scope.launch {
                             AppDatabase
                                 .getInstance(context)
                                 .userDao().insertAll(
@@ -118,8 +117,11 @@ fun SignUpPage(
                                         email = email.text,
                                     )
                                 )
-                        } else signUpResultMsg = successMsg
-                    }
+                            signUpResultMsg = successMsg
+                        }
+                    } else
+                        signUpResultMsg = "Email is invalid"
+
                 }) {
                 Text("Sign up", fontSize = MaterialTheme.typography.bodyLarge.fontSize)
             }
@@ -145,6 +147,7 @@ private fun SignUpPagePreview() {
         }
     }
 }
+
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun SignUpPagePreview_Dark() {
