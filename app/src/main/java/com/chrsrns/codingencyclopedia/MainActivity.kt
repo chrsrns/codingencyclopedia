@@ -126,17 +126,21 @@ class MainActivity : ComponentActivity() {
                                                 onSelectCategory = { selectedCategory = it })
                                         }
                                     } else if (selectedTerm != "") {
-                                        var allDefs = HashMap<String, String>()
-                                        for (system in mappedJson.keys) {
-                                            val systemAsData = mappedJson[system]
-                                            if (systemAsData != null) {
-                                                for (termChild in systemAsData.keys) {
-                                                    val termDefs = systemAsData[termChild]
-                                                    if (termChild == selectedTerm && termDefs != null)
-                                                        allDefs = HashMap(termDefs)
+                                        val allDefs:HashMap<String, String> by lazy {
+                                            var tmp: HashMap<String, String> = HashMap()
+                                            for (system in mappedJson.keys) {
+                                                val systemAsData = mappedJson[system]
+                                                if (systemAsData != null) {
+                                                    for (termChild in systemAsData.keys) {
+                                                        val termDefs = systemAsData[termChild]
+                                                        if (termChild == selectedTerm && termDefs != null)
+                                                            tmp = HashMap(termDefs)
+                                                    }
                                                 }
                                             }
+                                            return@lazy tmp
                                         }
+
                                         TermDefinitionsPage(
                                             termToDisplay = selectedTerm,
                                             definitions = allDefs
