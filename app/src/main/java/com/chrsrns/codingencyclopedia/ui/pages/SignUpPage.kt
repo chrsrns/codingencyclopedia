@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.chrsrns.codingencyclopedia.AppDatabase
 import com.chrsrns.codingencyclopedia.User
-import com.chrsrns.codingencyclopedia.Utilities.validateEmail
+import com.chrsrns.codingencyclopedia.utils.Utilities.validateEmail
 import com.example.compose.CodingEncyclopediaTheme
 import kotlinx.coroutines.launch
 
