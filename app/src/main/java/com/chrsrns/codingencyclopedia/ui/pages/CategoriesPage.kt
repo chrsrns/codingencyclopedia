@@ -22,9 +22,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -38,14 +35,7 @@ import com.chrsrns.codingencyclopedia.R
 import com.example.compose.CodingEncyclopediaTheme
 
 @Composable
-fun CategoriesPage(category: MutableState<String>) {
-
-    val items = arrayOf(
-        "Category 1",
-        "Category 2",
-        "Category 3",
-        "Category 4",
-    )
+fun CategoriesPage(categoryList: List<String>, onSelectCategory: (String) -> Unit) {
 
     Column(
         modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally
@@ -70,13 +60,14 @@ fun CategoriesPage(category: MutableState<String>) {
                             .height(4 * 48.dp)
                             .aspectRatio(1f), contentAlignment = Alignment.TopCenter
                     ) {
-                        Image(modifier = Modifier.fillMaxHeight(0.85f),
+                        Image(
+                            modifier = Modifier.fillMaxHeight(0.85f),
                             painter = painterResource(id = R.drawable.encyc_logo),
                             contentDescription = "content description"
                         )
                     }
                     Text(
-                        modifier = Modifier.offset(y=(-28).dp),
+                        modifier = Modifier.offset(y = (-28).dp),
                         text = "Coding\nEncyclopedia", style = TextStyle(
                             fontSize = MaterialTheme.typography.headlineLarge.fontSize,
                             fontWeight = FontWeight(700), textAlign = TextAlign.Center,
@@ -86,11 +77,14 @@ fun CategoriesPage(category: MutableState<String>) {
                 }
             }
             Divider()
-            for (item in items) {
+            for (item in categoryList) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp, horizontal = 20.dp),
+                        .padding(vertical = 16.dp, horizontal = 20.dp)
+                        .clickable {
+                            onSelectCategory(item)
+                        },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
@@ -108,10 +102,16 @@ fun CategoriesPage(category: MutableState<String>) {
 @Preview(showBackground = true)
 @Composable
 private fun Preview_Light() {
-    val category = remember { mutableStateOf("") }
+    val items = listOf(
+        "Category 1",
+        "Category 2",
+        "Category 3",
+        "Category 4",
+    )
+
     CodingEncyclopediaTheme {
         Surface {
-            CategoriesPage(category = category)
+            CategoriesPage(categoryList = items, onSelectCategory = {})
         }
     }
 }
