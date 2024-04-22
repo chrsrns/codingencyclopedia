@@ -37,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,7 +54,7 @@ import com.chrsrns.codingencyclopedia.R
 import com.chrsrns.codingencyclopedia.User
 import com.chrsrns.codingencyclopedia.utils.BitmapConverter
 import com.example.compose.CodingEncyclopediaTheme
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
 @Composable
@@ -153,6 +154,8 @@ fun ProfilePhoto(
     userEmail: String
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
     var bitmap by remember {
         mutableStateOf(
             BitmapFactory.decodeResource(
@@ -213,21 +216,25 @@ fun ProfilePhoto(
             BitmapFactory.decodeByteArray(bos.toByteArray(), 0, bos.toByteArray().size)
         bitmap =
             decodedByteArray
-        val db = AppDatabase.getInstance(LocalContext.current).userDao()
-        runBlocking {
-            val user = db.findByEmail(email = userEmail).collect { user ->
-                if (user != null) {
-                    println("Creating new user...")
-                    val newUser =
-                        User(
-                            user.email,
-                            user.name,
-                            BitmapConverter.convertBitmapToString(decodedByteArray)
-                        )
-                    println("Inserting user...")
-                    db.insertAll(newUser)
+        scope.launch {
+            AppDatabase
+                .getInstance(context)
+                .userDao()
+                .findByEmail(email = userEmail)
+                .collect { user ->
+                    if (user != null) {
+                        val newUser =
+                            User(
+                                user.email,
+                                user.name,
+                                BitmapConverter.convertBitmapToString(decodedByteArray)
+                            )
+                        AppDatabase
+                            .getInstance(context)
+                            .userDao()
+                            .insertAll(newUser)
+                    }
                 }
-            }
         }
 
     }
