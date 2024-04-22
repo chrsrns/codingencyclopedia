@@ -1,6 +1,5 @@
 package com.chrsrns.codingencyclopedia
 
-import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -30,7 +29,6 @@ import com.chrsrns.codingencyclopedia.ui.pages.TermDefinitionsPage
 import com.chrsrns.codingencyclopedia.ui.pages.TermListPage
 import com.chrsrns.codingencyclopedia.utils.BitmapConverter
 import com.chrsrns.codingencyclopedia.utils.MenuItem
-import com.chrsrns.codingencyclopedia.utils.Utilities.cleanFileName
 import com.chrsrns.codingencyclopedia.utils.toMap
 import com.example.compose.CodingEncyclopediaTheme
 import org.json.JSONObject
@@ -39,16 +37,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val assetsIndex: LinkedHashMap<String, String> = LinkedHashMap()
-
-        val assetManager: AssetManager = assets
-        val assetList = assetManager.list("")
-        if (assetList != null) {
-            for (file in assetList) {
-                assetsIndex[cleanFileName(file)] = file
-            }
-        }
 
         val rawJson =
             resources.openRawResource(R.raw.terms).readBytes().toString(Charsets.UTF_8)
@@ -151,9 +139,7 @@ class MainActivity : ComponentActivity() {
                                         }
                                         TermDefinitionsPage(
                                             termToDisplay = selectedTerm,
-                                            definitions = allDefs,
-                                            assets = assetManager,
-                                            assetsIndex = assetsIndex
+                                            definitions = allDefs
                                         )
                                     } else if (selectedCategory != "" || searchText != "") {
                                         println("Init list")
@@ -182,14 +168,12 @@ class MainActivity : ComponentActivity() {
                                         )
                                     }
                                 }
-
                                 MenuItem.PROFILE -> {
                                     ProfilePage(
                                         username = username.value,
                                         email = email.value,
                                     )
                                 }
-
                                 MenuItem.HELP -> HelpPage()
                             }
                         }
