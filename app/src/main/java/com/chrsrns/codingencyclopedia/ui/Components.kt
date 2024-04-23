@@ -20,7 +20,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Search
@@ -60,7 +59,6 @@ import java.io.ByteArrayOutputStream
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun TopNavBar(
-    onBackClick: () -> Unit,
     onHomeClick: () -> Unit,
     onMenuClick: () -> Unit,
     onNavSearchTextChanged: (String) -> Unit,
@@ -92,11 +90,6 @@ fun TopNavBar(
             IconButton(onClick = onMenuClick) {
                 Icon(
                     imageVector = Icons.Outlined.Menu, contentDescription = "Menu"
-                )
-            }
-            IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = Icons.Outlined.ArrowBack, contentDescription = "Go back"
                 )
             }
         }
@@ -246,7 +239,6 @@ private fun TopNavBar_Preview_Light() {
     CodingEncyclopediaTheme {
         Surface {
             TopNavBar(
-                onBackClick = { },
                 onHomeClick = { },
                 onMenuClick = { },
                 onNavSearchTextChanged = { _ -> },
