@@ -18,17 +18,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.chrsrns.codingencyclopedia.ui.TopNavBar
 import com.chrsrns.codingencyclopedia.ui.pages.CategoriesPage
-import com.chrsrns.codingencyclopedia.ui.pages.HelpPage
-import com.chrsrns.codingencyclopedia.ui.pages.MenuPage
-import com.chrsrns.codingencyclopedia.ui.pages.ProfilePage
 import com.chrsrns.codingencyclopedia.ui.pages.SignInPage
 import com.chrsrns.codingencyclopedia.ui.pages.SignUpPage
 import com.chrsrns.codingencyclopedia.ui.pages.TermDefinitionsPage
 import com.chrsrns.codingencyclopedia.ui.pages.TermListPage
 import com.chrsrns.codingencyclopedia.utils.BitmapConverter
-import com.chrsrns.codingencyclopedia.utils.MenuItem
 import com.chrsrns.codingencyclopedia.utils.toMap
 import com.example.compose.CodingEncyclopediaTheme
 import org.json.JSONObject
@@ -62,127 +61,109 @@ class MainActivity : ComponentActivity() {
                     val username = remember { mutableStateOf("") }
                     val email = remember { mutableStateOf("") }
 
-                    val expandMenu = remember { mutableStateOf(false) }
-                    var selectedMenuItem by remember { mutableStateOf(MenuItem.HOME) }
-
-                    val isSignUp = remember { mutableStateOf(true) }
+                    val navController = rememberNavController()
 
                     Scaffold(topBar = {
-                        TopNavBar(navSearchText = searchText,
-                            onNavSearchTextChanged = {
-                                searchText = it
-                            },
-                            onHomeClick = {
-                                selectedCategory = ""
-                                selectedTerm = ""
-                                searchText = ""
-                                expandMenu.value = false
-                                selectedMenuItem = MenuItem.HOME
-                            }, onBackClick = {
-                                if (selectedMenuItem == MenuItem.HOME)
-                                    if (selectedTerm != "") selectedTerm = ""
-                                    else if (searchText != "") searchText = ""
-                                    else if (selectedCategory != "") selectedCategory =
-                                        ""
-                                if (!expandMenu.value)
-                                    selectedMenuItem = MenuItem.HOME
-                                else
-                                    expandMenu.value = false
-                            }, onMenuClick = {
-                                expandMenu.value = !expandMenu.value
-                            })
+                        TopNavBar(navSearchText = searchText, onNavSearchTextChanged = {
+                            searchText = it
+                            navController.currentBackStackEntry?.let {backStackEntry ->
+                                if (backStackEntry.destination.route != AppScreen.TERM_LIST.name) {
+                                    println("ID: ${backStackEntry.destination.route}")
+                                    println("Navigating to term list page...")
+                                    navController.navigate(AppScreen.TERM_LIST.name)
+                                }
+                            }
+                        }, onHomeClick = {
+                            selectedCategory = ""
+                            selectedTerm = ""
+                            searchText = ""
+                            navController.navigate(AppScreen.CATEGORIES.name)
+                        }, onMenuClick = {
+                        })
                     }) { innerPadding ->
                         Column(
                             modifier = Modifier.padding(innerPadding),
                             verticalArrangement = Arrangement.spacedBy(16.dp),
                         ) {
-                            if (expandMenu.value) {
-                                MenuPage(
-                                    selectedMenuItem = selectedMenuItem,
-                                    onMenuItemClick = { menuItem ->
-                                        selectedMenuItem = menuItem
-                                        expandMenu.value = false
-                                    },
-                                    showProfile = !(username.value == "" && email.value == "")
-                                )
-                            } else when (selectedMenuItem) {
-                                MenuItem.HOME -> {
-                                    if (selectedCategory == "" && searchText == "") {
-                                        if (username.value == "" && email.value == "") {
-                                            if (isSignUp.value)
-                                                SignUpPage(onSignUpSwitchClicked = {
-                                                    isSignUp.value = false
-                                                })
-                                            else SignInPage(
-                                                onSignInClicked = { e, n, photoB64 ->
-                                                    username.value = n
-                                                    email.value = e
-                                                    bitmap.value =
-                                                        BitmapConverter.convertStringToBitmap(
-                                                            photoB64
-                                                        )
-
-                                                },
-                                                onSignInSwitchClicked = { isSignUp.value = true })
-                                        } else {
-                                            CategoriesPage(
-                                                categoryList = mappedJson.keys.toList(),
-                                                onSelectCategory = { selectedCategory = it })
-                                        }
-                                    } else if (selectedTerm != "") {
-                                        val allDefs:HashMap<String, String> by lazy {
-                                            var tmp: HashMap<String, String> = HashMap()
-                                            for (system in mappedJson.keys) {
-                                                val systemAsData = mappedJson[system]
-                                                if (systemAsData != null) {
-                                                    for (termChild in systemAsData.keys) {
-                                                        val termDefs = systemAsData[termChild]
-                                                        if (termChild == selectedTerm && termDefs != null)
-                                                            tmp = HashMap(termDefs)
-                                                    }
+                            NavHost(
+                                navController = navController,
+                                startDestination = AppScreen.SIGN_IN.name
+                            ) {
+                                composable(route = AppScreen.SIGN_IN.name) {
+                                    SignInPage(
+                                        onSignInClicked = { e, n, photoB64 ->
+                                            username.value = n
+                                            email.value = e
+                                            bitmap.value = BitmapConverter.convertStringToBitmap(
+                                                photoB64
+                                            )
+                                            navController.navigate(AppScreen.CATEGORIES.name) {
+                                                popUpTo(navController.graph.id) {
+                                                    inclusive = true
                                                 }
                                             }
-                                            return@lazy tmp
-                                        }
-
-                                        TermDefinitionsPage(
-                                            termToDisplay = selectedTerm,
-                                            definitions = allDefs
-                                        )
-                                    } else if (selectedCategory != "" || searchText != "") {
-                                        println("Init list")
-                                        val allTerms = ArrayList<String>()
-                                        println("Init for loop")
-                                        for (system in mappedJson.keys) {
-                                            val systemAsData = mappedJson[system]
-                                            println(systemAsData)
-                                            if (systemAsData != null) {
-                                                for (termChild in systemAsData.keys) {
-                                                    if (searchText != "" && !termChild.lowercase()
-                                                            .contains(searchText.lowercase())
-                                                    ) continue
-                                                    allTerms.add(termChild)
-                                                }
-                                            }
-                                        }
-                                        println("Number of terms: ${allTerms.size}")
-                                        TermListPage(
-                                            selectedCategory = selectedCategory,
-                                            searchText = searchText,
-                                            termsList = allTerms,
-                                            onTermClick = { term ->
-                                                selectedTerm = term
-                                            }
-                                        )
-                                    }
+                                        }, onSignInSwitchClicked = {
+                                            navController.navigate(AppScreen.SIGN_UP.name)
+                                        })
                                 }
-                                MenuItem.PROFILE -> {
-                                    ProfilePage(
-                                        username = username.value,
-                                        email = email.value,
+                                composable(route = AppScreen.SIGN_UP.name) {
+                                    SignUpPage(onSignUpSwitchClicked = {
+                                        navController.navigate(AppScreen.SIGN_IN.name)
+                                    })
+                                }
+                                composable(route = AppScreen.CATEGORIES.name) {
+                                    CategoriesPage(
+                                        categoryList = mappedJson.keys.toList(),
+                                        onSelectCategory = {
+                                            selectedCategory = it
+                                            navController.navigate(AppScreen.TERM_LIST.name)
+                                        }
                                     )
                                 }
-                                MenuItem.HELP -> HelpPage()
+                                composable(route = AppScreen.TERM_LIST.name) {
+                                    val allTerms = ArrayList<String>()
+                                    for (system in mappedJson.keys) {
+                                        val systemAsData = mappedJson[system]
+                                        if (systemAsData != null) {
+                                            for (termChild in systemAsData.keys) {
+                                                if (searchText != "" && !termChild.lowercase()
+                                                        .contains(searchText.lowercase())
+                                                ) continue
+                                                allTerms.add(termChild)
+                                            }
+                                        }
+                                    }
+                                    TermListPage(
+                                        selectedCategory = selectedCategory,
+                                        searchText = searchText,
+                                        termsList = allTerms,
+                                        onTermClick = { term ->
+                                            println("Attempt navigate to definitions...")
+                                            selectedTerm = term
+                                            navController.navigate(AppScreen.TERM_DEFINITION.name)
+                                        }
+                                    )
+                                }
+                                composable(route = AppScreen.TERM_DEFINITION.name) {
+                                    val allDefs: HashMap<String, String> by lazy {
+                                        var tmp: HashMap<String, String> = HashMap()
+                                        for (system in mappedJson.keys) {
+                                            val systemAsData = mappedJson[system]
+                                            if (systemAsData != null) {
+                                                for (termChild in systemAsData.keys) {
+                                                    val termDefs = systemAsData[termChild]
+                                                    if (termChild == selectedTerm && termDefs != null)
+                                                        tmp = HashMap(termDefs)
+                                                }
+                                            }
+                                        }
+                                        return@lazy tmp
+                                    }
+                                    TermDefinitionsPage(
+                                        termToDisplay = selectedTerm,
+                                        definitions = allDefs
+                                    )
+                                }
                             }
                         }
 
