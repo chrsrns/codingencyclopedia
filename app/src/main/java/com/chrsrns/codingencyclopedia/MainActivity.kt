@@ -33,6 +33,10 @@ import com.chrsrns.codingencyclopedia.utils.toMap
 import com.example.compose.CodingEncyclopediaTheme
 import org.json.JSONObject
 
+private enum class AppScreen {
+    CATEGORIES, HELP, MENU, PROFILE, SIGN_IN, SIGN_UP, TERM_DEFINITION, TERM_LIST
+}
+
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
