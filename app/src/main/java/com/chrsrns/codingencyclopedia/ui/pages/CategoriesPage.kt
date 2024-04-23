@@ -80,11 +80,11 @@ fun CategoriesPage(categoryList: List<String>, onSelectCategory: (String) -> Uni
             for (item in categoryList) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp, horizontal = 20.dp)
                         .clickable {
                             onSelectCategory(item)
-                        },
+                        }
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp, horizontal = 20.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
