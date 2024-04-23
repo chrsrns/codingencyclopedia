@@ -41,8 +41,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val rawJson =
-            resources.openRawResource(R.raw.terms).readBytes().toString(Charsets.UTF_8)
+        val rawJson = resources.openRawResource(R.raw.terms).readBytes().toString(Charsets.UTF_8)
         val jsonObj = JSONObject(rawJson)
 
         val mappedJson = jsonObj.toMap() as Map<String, Map<String, Map<String, String>>>
@@ -50,8 +49,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CodingEncyclopediaTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
                     var selectedCategory by remember { mutableStateOf("") }
                     var selectedTerm by remember { mutableStateOf("") }
