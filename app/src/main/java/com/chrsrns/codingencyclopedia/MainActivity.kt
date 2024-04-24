@@ -97,6 +97,7 @@ class MainActivity : ComponentActivity() {
                                             MenuItem.HOME -> AppScreen.CATEGORIES.name
                                             MenuItem.PROFILE -> AppScreen.PROFILE.name
                                             MenuItem.HELP -> AppScreen.HELP.name
+                                            MenuItem.SIGN_IN -> AppScreen.SIGN_IN.name
                                         }
                                     )
                                 },

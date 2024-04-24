@@ -28,6 +28,7 @@ import java.util.Locale
 
 enum class MenuItem(val string: String) {
     HOME("HOME"),
+    SIGN_IN("SIGN IN"),
     PROFILE("PROFILE"),
     HELP("HELP");
 
