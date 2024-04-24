@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 private enum class AppScreen {
-    CATEGORIES, HELP, MENU, PROFILE, SIGN_IN, SIGN_UP, TERM_DEFINITION, TERM_LIST
+    CATEGORIES, HELP, PROFILE, SIGN_IN, SIGN_UP, TERM_DEFINITION, TERM_LIST
 }
 
 
