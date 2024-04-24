@@ -29,13 +29,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.chrsrns.codingencyclopedia.ui.TopNavBar
 import com.chrsrns.codingencyclopedia.ui.pages.CategoriesPage
+import com.chrsrns.codingencyclopedia.ui.pages.MenuItem
 import com.chrsrns.codingencyclopedia.ui.pages.MenuPage
 import com.chrsrns.codingencyclopedia.ui.pages.SignInPage
 import com.chrsrns.codingencyclopedia.ui.pages.SignUpPage
 import com.chrsrns.codingencyclopedia.ui.pages.TermDefinitionsPage
 import com.chrsrns.codingencyclopedia.ui.pages.TermListPage
 import com.chrsrns.codingencyclopedia.utils.BitmapConverter
-import com.chrsrns.codingencyclopedia.ui.pages.MenuItem
 import com.chrsrns.codingencyclopedia.utils.toMap
 import com.example.compose.CodingEncyclopediaTheme
 import kotlinx.coroutines.launch
