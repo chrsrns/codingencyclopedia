@@ -23,6 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -74,16 +75,22 @@ class MainActivity : ComponentActivity() {
 
                     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
                         ModalDrawerSheet {
+                            var selectedMenuItem by remember { mutableStateOf(MenuItem.HOME) }
+                            navController.addOnDestinationChangedListener { _, navDestination: NavDestination, _ ->
+                                selectedMenuItem =
+                                    when (navDestination.route?.let { routeStr ->
+                                        println("selected = $routeStr")
+                                        AppScreen.valueOf(
+                                            routeStr
+                                        )
+                                    } ?: AppScreen.CATEGORIES) {
+                                        AppScreen.HELP -> MenuItem.HELP
+                                        AppScreen.PROFILE -> MenuItem.PROFILE
+                                        else -> MenuItem.HOME
+                                    }
+                            }
                             MenuPage(
-                                selectedMenuItem = when (navController.currentDestination?.route?.let { routeStr ->
-                                    AppScreen.valueOf(
-                                        routeStr
-                                    )
-                                } ?: AppScreen.CATEGORIES) {
-                                    AppScreen.HELP -> MenuItem.HELP
-                                    AppScreen.PROFILE -> MenuItem.PROFILE
-                                    else -> MenuItem.HOME
-                                },
+                                selectedMenuItem = selectedMenuItem,
                                 onMenuItemClick = { menuItem ->
                                     navController.navigate(
                                         when (menuItem) {
