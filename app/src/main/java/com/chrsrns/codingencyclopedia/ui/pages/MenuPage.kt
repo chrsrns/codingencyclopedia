@@ -85,7 +85,11 @@ fun MenuPage(
 private fun Preview_Light() {
     CodingEncyclopediaTheme {
         Surface {
-            MenuPage(selectedMenuItem = MenuItem.HOME, onMenuItemClick = { _ -> }, showProfile = true)
+            MenuPage(
+                selectedMenuItem = MenuItem.HOME,
+                onMenuItemClick = { _ -> },
+                isLoggedIn = true
+            )
         }
     }
 }
