@@ -101,7 +101,7 @@ class MainActivity : ComponentActivity() {
                                         }
                                     )
                                 },
-                                showProfile = !(username.value == "" && email.value == "")
+                                isLoggedIn = !(username.value == "" && email.value == "")
                             )
                         }
                     }) {

@@ -41,7 +41,7 @@ enum class MenuItem(val string: String) {
 fun MenuPage(
     selectedMenuItem: MenuItem,
     onMenuItemClick: (MenuItem) -> Unit,
-    showProfile: Boolean
+    isLoggedIn: Boolean
 ) {
     Column(
         modifier = Modifier
@@ -50,8 +50,9 @@ fun MenuPage(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(Modifier.verticalScroll(rememberScrollState())) {
-            for (menuItem in MenuItem.entries) {
-                if (!showProfile && (menuItem == MenuItem.PROFILE)) continue
+            for (menuItem in MenuItem.entries.filter {
+                ((isLoggedIn && it != MenuItem.SIGN_IN) || (!isLoggedIn && it != MenuItem.HOME && it != MenuItem.PROFILE))
+            }) {
                 Box(
                     Modifier
                         .fillMaxWidth()
