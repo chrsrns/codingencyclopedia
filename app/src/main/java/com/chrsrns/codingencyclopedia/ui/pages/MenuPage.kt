@@ -26,8 +26,14 @@ import androidx.compose.ui.unit.sp
 import com.example.compose.CodingEncyclopediaTheme
 import java.util.Locale
 
-enum class MenuItem {
-    HOME, PROFILE, HELP
+enum class MenuItem(val string: String) {
+    HOME("HOME"),
+    PROFILE("PROFILE"),
+    HELP("HELP");
+
+    override fun toString(): String {
+        return string
+    }
 }
 
 @Composable
