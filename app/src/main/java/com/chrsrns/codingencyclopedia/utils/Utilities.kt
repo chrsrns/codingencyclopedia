@@ -18,7 +18,7 @@ object Utilities {
         val baseName = relativePath.substringAfterLast('/')
         val fileName = baseName.substringBeforeLast('.', baseName)
         val cleanedFileNameWithSpaces =
-            fileName.replace(Regex("[^a-zA-Z0-9]"), " ").toLowerCase(Locale.ROOT)
+            fileName.replace(Regex("[^a-zA-Z0-9]"), " ").lowercase(Locale.ROOT)
 
         return cleanedFileNameWithSpaces.replace(" ", "")
     }
