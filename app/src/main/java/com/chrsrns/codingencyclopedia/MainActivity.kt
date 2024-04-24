@@ -29,8 +29,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.chrsrns.codingencyclopedia.ui.TopNavBar
 import com.chrsrns.codingencyclopedia.ui.pages.CategoriesPage
+import com.chrsrns.codingencyclopedia.ui.pages.HelpPage
 import com.chrsrns.codingencyclopedia.ui.pages.MenuItem
 import com.chrsrns.codingencyclopedia.ui.pages.MenuPage
+import com.chrsrns.codingencyclopedia.ui.pages.ProfilePage
 import com.chrsrns.codingencyclopedia.ui.pages.SignInPage
 import com.chrsrns.codingencyclopedia.ui.pages.SignUpPage
 import com.chrsrns.codingencyclopedia.ui.pages.TermDefinitionsPage
@@ -217,6 +219,12 @@ class MainActivity : ComponentActivity() {
                                             termToDisplay = selectedTerm,
                                             definitions = allDefs
                                         )
+                                    }
+                                    composable(route = AppScreen.HELP.name) {
+                                        HelpPage()
+                                    }
+                                    composable(route = AppScreen.PROFILE.name) {
+                                        ProfilePage(username = username.value, email = email.value)
                                     }
                                 }
                             }
