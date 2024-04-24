@@ -100,6 +100,11 @@ class MainActivity : ComponentActivity() {
                                             MenuItem.SIGN_IN -> AppScreen.SIGN_IN.name
                                         }
                                     )
+                                    scope.launch {
+                                        drawerState.apply {
+                                            close()
+                                        }
+                                    }
                                 },
                                 isLoggedIn = !(username.value == "" && email.value == "")
                             )
