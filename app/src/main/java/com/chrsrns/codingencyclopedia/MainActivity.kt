@@ -35,7 +35,7 @@ import com.chrsrns.codingencyclopedia.ui.pages.SignUpPage
 import com.chrsrns.codingencyclopedia.ui.pages.TermDefinitionsPage
 import com.chrsrns.codingencyclopedia.ui.pages.TermListPage
 import com.chrsrns.codingencyclopedia.utils.BitmapConverter
-import com.chrsrns.codingencyclopedia.utils.MenuItem
+import com.chrsrns.codingencyclopedia.ui.pages.MenuItem
 import com.chrsrns.codingencyclopedia.utils.toMap
 import com.example.compose.CodingEncyclopediaTheme
 import kotlinx.coroutines.launch
