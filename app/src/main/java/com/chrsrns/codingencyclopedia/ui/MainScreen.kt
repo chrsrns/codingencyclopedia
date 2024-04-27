@@ -11,16 +11,13 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.chrsrns.codingencyclopedia.MainViewModel
 import com.chrsrns.codingencyclopedia.ui.pages.CategoriesPage
@@ -49,27 +46,25 @@ fun MainScreen(
     val navController = rememberNavController()
     val scope = rememberCoroutineScope()
 
-    var selectedMenuItem by remember { mutableStateOf(MenuItem.HOME) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     val uiState by mainViewModel.uiState.collectAsState()
 
     ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
         ModalDrawerSheet {
-            navController.addOnDestinationChangedListener { _, navDestination: NavDestination, _ ->
-                selectedMenuItem =
-                    when (navDestination.route?.let { routeStr ->
-                        println("selected = $routeStr")
-                        AppScreen.valueOf(
-                            routeStr
-                        )
-                    } ?: AppScreen.CATEGORIES) {
-                        AppScreen.HELP -> MenuItem.HELP
-                        AppScreen.PROFILE -> MenuItem.PROFILE
-                        else -> MenuItem.HOME
-                    }
-            }
             MenuPage(
-                selectedMenuItem = selectedMenuItem,
+                selectedMenuItem = when (navBackStackEntry?.destination?.route?.let
+                { routeStr ->
+                    println("selected = $routeStr")
+                    AppScreen.valueOf(
+                        routeStr
+                    )
+                } ?: AppScreen.CATEGORIES) {
+                    AppScreen.HELP -> MenuItem.HELP
+                    AppScreen.PROFILE -> MenuItem.PROFILE
+                    AppScreen.SIGN_IN -> MenuItem.SIGN_IN
+                    else -> MenuItem.HOME
+                },
                 onMenuItemClick = { menuItem ->
                     navController.navigate(
                         when (menuItem) {
